@@ -1,13 +1,9 @@
 "use client"
-import { useRecording } from "../recording/useRecorder"
+
+import { useRecording } from "@/recording/useRecorder"
 
 export default function Home() {
-  const { initializeRecorder, recorder, stream } = useRecording()
-
-  const handleStart = async () => {
-    initializeRecorder()
-  }
-  const handleStop = () => {}
+  const { start, stop, isRecording, frequency } = useRecording()
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-slate-950 p-6">
@@ -22,21 +18,25 @@ export default function Home() {
         <div className="mt-8 flex gap-3">
           <button
             type="button"
-            onClick={handleStart}
+            onClick={start}
+            disabled={isRecording}
             className="flex-1 cursor-pointer rounded-xl bg-emerald-400 px-4 py-3 font-semibold text-slate-950 transition hover:bg-emerald-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-300 active:scale-[0.98]"
           >
             Start
           </button>
           <button
             type="button"
-            onClick={handleStop}
+            onClick={stop}
+            disabled={!isRecording}
             className="flex-1 cursor-pointer rounded-xl border border-slate-600 px-4 py-3 font-semibold text-slate-100 transition hover:border-slate-400 hover:bg-slate-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-300 active:scale-[0.98]"
           >
             Stop
           </button>
         </div>
 
-        <audio className="sr-only" />
+        <p className="mt-6 text-center text-4xl font-semibold text-emerald-300">
+          {frequency === null ? "Listening…" : `${frequency.toFixed(1)} Hz`}
+        </p>
       </section>
     </main>
   )

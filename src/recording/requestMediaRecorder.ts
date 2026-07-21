@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react"
-
 export const requestMediaRecorder = async (
   options?: MediaRecorderOptions | undefined,
 ): Promise<{ recorder: MediaRecorder; stream: MediaStream }> => {
