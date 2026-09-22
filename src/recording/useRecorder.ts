@@ -7,7 +7,10 @@ import { stopRecordingSession } from "./recordingSession"
 
 export const useRecording = () => {
   const [isRecording, setIsRecording] = useState(false)
+  const [isStarting, setIsStarting] = useState(false)
   const [frequency, setFrequency] = useState<number | null>(null)
+  const [frequencyRevision, setFrequencyRevision] = useState(0)
+  const [error, setError] = useState<string | null>(null)
 
   const recorderRef = useRef<MediaRecorder | null>(null)
   const streamRef = useRef<MediaStream | null>(null)
@@ -33,7 +36,9 @@ export const useRecording = () => {
 
     if (isMountedRef.current) {
       setIsRecording(false)
+      setIsStarting(false)
       setFrequency(null)
+      setFrequencyRevision((revision) => revision + 1)
     }
   }, [])
 
@@ -41,6 +46,10 @@ export const useRecording = () => {
     if (isStartingRef.current || recorderRef.current) return
 
     isStartingRef.current = true
+    setIsStarting(true)
+    setError(null)
+    setFrequency(null)
+    setFrequencyRevision((revision) => revision + 1)
 
     try {
       const { recorder, stream } = await requestMediaRecorder()
@@ -68,18 +77,27 @@ export const useRecording = () => {
       setIsRecording(true)
 
       const samples = new Float32Array(analyser.fftSize)
+
       const updateFrequency = () => {
         analyser.getFloatTimeDomainData(samples)
         setFrequency(detectPitch(samples, audioContext.sampleRate))
+        setFrequencyRevision((revision) => revision + 1)
         frameRef.current = requestAnimationFrame(updateFrequency)
       }
 
       frameRef.current = requestAnimationFrame(updateFrequency)
-    } catch (error) {
+    } catch {
       await stop()
-      throw error
+
+      if (isMountedRef.current) {
+        setError("Microphone access was denied or unavailable.")
+      }
     } finally {
       isStartingRef.current = false
+
+      if (isMountedRef.current) {
+        setIsStarting(false)
+      }
     }
   }, [stop])
 
@@ -90,5 +108,13 @@ export const useRecording = () => {
     }
   }, [stop])
 
-  return { start, stop, isRecording, frequency }
+  return {
+    start,
+    stop,
+    isRecording,
+    isStarting,
+    frequency,
+    frequencyRevision,
+    error,
+  }
 }
