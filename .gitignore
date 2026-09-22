@@ -14,3 +14,7 @@
 
 # debug
 npm-debug.log*
+
+# ai
+/.agents
+skills-lock.json
