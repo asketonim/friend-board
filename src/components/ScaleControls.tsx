@@ -1,22 +1,24 @@
 import { NoteName, SHARP_NOTE_NAMES } from "@/music/notes"
 import { SCALE_TYPES, ScaleTypeId } from "@/music/scales"
 
+type ScaleControlsChange = {
+  scaleRoot?: NoteName
+  scaleTypeId?: ScaleTypeId
+  showScale?: boolean
+}
+
 type ScaleControlsProps = {
   scaleRoot: NoteName
   scaleTypeId: ScaleTypeId
   showScale: boolean
-  onScaleRootChange: (scaleRoot: NoteName) => void
-  onScaleTypeIdChange: (scaleTypeId: ScaleTypeId) => void
-  onShowScaleChange: (showScale: boolean) => void
+  onChange: (patch: ScaleControlsChange) => void
 }
 
 export const ScaleControls = ({
   scaleRoot,
   scaleTypeId,
   showScale,
-  onScaleRootChange,
-  onScaleTypeIdChange,
-  onShowScaleChange,
+  onChange,
 }: ScaleControlsProps) => (
   <div className="flex flex-col gap-3 border-y border-zinc-300/70 py-4 sm:flex-row sm:items-center sm:justify-between">
     <div>
@@ -34,7 +36,7 @@ export const ScaleControls = ({
         <select
           value={scaleRoot}
           onChange={(event) =>
-            onScaleRootChange(event.target.value as NoteName)
+            onChange({ scaleRoot: event.target.value as NoteName })
           }
           className="min-w-24 rounded-full border border-zinc-300 bg-white px-4 py-2 font-mono text-sm font-semibold tracking-normal text-zinc-950 shadow-sm outline-none transition focus:border-zinc-950"
         >
@@ -51,7 +53,7 @@ export const ScaleControls = ({
         <select
           value={scaleTypeId}
           onChange={(event) =>
-            onScaleTypeIdChange(event.target.value as ScaleTypeId)
+            onChange({ scaleTypeId: event.target.value as ScaleTypeId })
           }
           className="min-w-48 rounded-full border border-zinc-300 bg-white px-4 py-2 text-sm font-semibold tracking-normal text-zinc-950 shadow-sm outline-none transition focus:border-zinc-950"
         >
@@ -67,7 +69,7 @@ export const ScaleControls = ({
         <input
           type="checkbox"
           checked={showScale}
-          onChange={(event) => onShowScaleChange(event.target.checked)}
+          onChange={(event) => onChange({ showScale: event.target.checked })}
           className="h-4 w-4 accent-zinc-950"
         />
         Show scale
