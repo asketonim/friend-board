@@ -118,12 +118,12 @@ Current shape:
 ```tsx
 // src/app/page.tsx
 import { Suspense } from "react"
-import { BoardPage } from "./BoardPage"
+import { Board } from "./Board"
 
 export default function Home() {
   return (
     <Suspense>
-      <BoardPage />
+      <Board />
     </Suspense>
   )
 }

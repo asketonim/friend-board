@@ -9,7 +9,7 @@ import { useStableDetectedNotes } from "@/music/useStableDetectedNotes"
 import { useRecording } from "@/recording/useRecorder"
 import { useBoardViewSearchParams } from "./useBoardViewSearchParams"
 
-export const BoardPage = () => {
+export const Board = () => {
   const {
     start,
     stop,
