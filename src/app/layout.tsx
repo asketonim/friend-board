@@ -3,7 +3,7 @@ import "./globals.css"
 
 export const metadata: Metadata = {
   title: "Friend Board",
-  description: "A Next.js application",
+  description: "Visualize guitar notes, scales, and live pitch on a fretboard.",
 }
 
 export default function RootLayout({
